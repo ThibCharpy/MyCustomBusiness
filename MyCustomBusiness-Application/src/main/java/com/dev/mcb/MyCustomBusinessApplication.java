@@ -9,7 +9,7 @@ import io.dropwizard.setup.Environment;
 public class MyCustomBusinessApplication extends Application<MyCustomBusinessConfiguration> {
 
     private final HibernateBundle<MyCustomBusinessConfiguration> hibernate =
-            new HibernateBundle<MyCustomBusinessConfiguration>(Customer.class) {
+            new HibernateBundle<MyCustomBusinessConfiguration>(User.class) {
         @Override
         public DataSourceFactory getDataSourceFactory(MyCustomBusinessConfiguration configuration) {
             return configuration.getDataSourceFactory();
