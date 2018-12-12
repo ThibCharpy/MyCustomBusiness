@@ -1,5 +1,7 @@
 package com.dev.mcb;
 
+import com.dev.mcb.resource.LoginResource;
+import com.dev.mcb.resource.UserResource;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -7,6 +9,8 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 public class MyCustomBusinessApplication extends Application<MyCustomBusinessConfiguration> {
+
+    private static final String APPLICATION_NAME = "My Custom Business";
 
     private final HibernateBundle<MyCustomBusinessConfiguration> hibernate =
             new HibernateBundle<MyCustomBusinessConfiguration>(User.class) {
@@ -22,7 +26,7 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
 
     @Override
     public String getName() {
-        return "My Custom Business !";
+        return APPLICATION_NAME;
     }
 
     @Override
@@ -33,6 +37,7 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     @Override
     public void run(MyCustomBusinessConfiguration myCustomBusinessConfiguration,
                     Environment environment) throws Exception {
-
+        environment.jersey().register(LoginResource.class);
+        environment.jersey().register(UserResource.class);
     }
 }
