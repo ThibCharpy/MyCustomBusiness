@@ -10,9 +10,6 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class LoginResource {
 
-    public LoginResource() {
-    }
-
     @POST
     public void login(){
 

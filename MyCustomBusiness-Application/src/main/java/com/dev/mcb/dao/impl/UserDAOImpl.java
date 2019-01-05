@@ -5,8 +5,10 @@ import com.dev.mcb.dao.UserDAO;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
 
@@ -17,28 +19,32 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
     }
 
     @Override
-    public UserEntity findById(Long id) {
-        return get(id);
+    public Optional<UserEntity> findById(Long id) {
+        return Optional.ofNullable(get(id));
     }
 
     @Override
-    public long create(UserEntity user) {
-        return persist(user).getId();
+    public UserEntity create(UserEntity user) {
+        return persist(user);
     }
 
     @Override
     public UserEntity update(UserEntity user) {
-        //TODO: to be implemented
+
         return null;
     }
 
     @Override
     public void delete(long userId) {
-        //TODO: to be implemented
+        Optional<UserEntity> user = findById(userId);
+        if (user.isPresent()) {
+            this.currentSession().delete(user);
+        }
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<UserEntity> findAll() {
-        return list(namedQuery("com.dev.mcb.core.User.findAll"));
+        return list((Query<UserEntity>) namedQuery("com.dev.mcb.core.User.findAll"));
     }
 }

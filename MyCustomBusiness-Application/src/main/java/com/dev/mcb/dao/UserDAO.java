@@ -3,6 +3,7 @@ package com.dev.mcb.dao;
 import com.dev.mcb.core.UserEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDAO {
 
@@ -11,14 +12,14 @@ public interface UserDAO {
      * @param id user id
      * @return the User entity
      */
-    public UserEntity findById(Long id);
+    public Optional<UserEntity> findById(Long id);
 
     /**
      * Create a new user
      * @param user the new user
      * @return the created user
      */
-    public long create(UserEntity user);
+    public UserEntity create(UserEntity user);
 
     /**
      * Update the user in parameter
@@ -37,6 +38,6 @@ public interface UserDAO {
      * Retrieve every user
      * @return the list of users
      */
-    public List<UserEntity> findAll();
+    public List findAll();
 
 }
