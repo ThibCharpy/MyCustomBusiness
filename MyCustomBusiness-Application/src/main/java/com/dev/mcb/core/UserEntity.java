@@ -3,8 +3,8 @@ package com.dev.mcb.core;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "mcb_user")
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,38 +14,18 @@ public class User {
     @Column(name = "username")
     private String username;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "password")
     private String password;
 
-    /*@Column(name = "name")
-    private String name;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "city")
-    private String city;
-
-    @Column(name = "code")
-    private String code;
-
-    @Column(name = "key")
-    private String key;
-
-    @Column(name = "floor")
-    private String floor;*/
-
-    public User() {
+    public UserEntity() {
     }
 
-    public User(String username, String password) {
+    public UserEntity(String username, String email, String password) {
         this.username = username;
-        this.password = password;
-    }
-
-    public User(Long id, String username, String password) {
-        this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
     }
 
@@ -63,6 +43,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

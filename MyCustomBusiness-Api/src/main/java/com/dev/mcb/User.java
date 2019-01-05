@@ -1,32 +1,11 @@
 package com.dev.mcb;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class User {
 
     private Long id;
     private String username;
+    private String email;
     private String password;
-    /*private String name;
-    private String address;
-    private String city;
-    private String code;
-    private String key;
-    private String floor;*/
-
-    public User() {
-    }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public User(Long id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
 
     public Long getId() {
         return id;
@@ -42,6 +21,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

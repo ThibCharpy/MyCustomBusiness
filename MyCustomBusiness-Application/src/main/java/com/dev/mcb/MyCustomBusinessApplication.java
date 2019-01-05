@@ -1,5 +1,7 @@
 package com.dev.mcb;
 
+import com.dev.mcb.dao.UserDAO;
+import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.resource.LoginResource;
 import com.dev.mcb.resource.UserResource;
 import io.dropwizard.Application;
@@ -37,6 +39,9 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     @Override
     public void run(MyCustomBusinessConfiguration myCustomBusinessConfiguration,
                     Environment environment) throws Exception {
+
+        final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
+
         environment.jersey().register(LoginResource.class);
         environment.jersey().register(UserResource.class);
     }
