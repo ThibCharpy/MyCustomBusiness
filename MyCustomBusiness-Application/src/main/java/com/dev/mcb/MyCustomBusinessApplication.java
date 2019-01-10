@@ -17,6 +17,10 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
 
     private static final String APPLICATION_NAME = "My Custom Business";
 
+    public static void main(String[] args) throws Exception {
+        new MyCustomBusinessApplication().run(args);
+    }
+
     private final HibernateBundle<MyCustomBusinessConfiguration> hibernate =
             new HibernateBundle<MyCustomBusinessConfiguration>(User.class) {
         @Override
@@ -24,10 +28,6 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
             return configuration.getDataSourceFactory();
         }
     };
-
-    public static void main(String[] args) throws Exception {
-        new MyCustomBusinessApplication().run(args);
-    }
 
     @Override
     public String getName() {
@@ -51,13 +51,10 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
             protected void configure() {
 
                 // Services
-                bind(new UserService()).to(UserService.class);
+                bind(new UserService(userDAO)).to(UserService.class);
 
                 // Mappers
                 bind(new UserMapper()).to(UserMapper.class);
-
-                // DAOs
-                bind(userDAO).to(UserDAO.class);
             }
         });
 

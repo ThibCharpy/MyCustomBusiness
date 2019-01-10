@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MyCustomBusiness.iml" filepath="$PROJECT_DIR$/.idea/MyCustomBusiness.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusiness-Api.iml" filepath="$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusiness-Api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusiness-Api.iml" filepath="$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusiness-Api.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusinessApi.iml" filepath="$PROJECT_DIR$/MyCustomBusiness-Api/MyCustomBusinessApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/MyCustomBusiness-Application/MyCustomBusinessApplication.iml" filepath="$PROJECT_DIR$/MyCustomBusiness-Application/MyCustomBusinessApplication.iml" />
     </modules>

@@ -30,7 +30,7 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
 
     @Override
     public UserEntity update(UserEntity user) {
-
+        this.currentSession().saveOrUpdate(user);
         return null;
     }
 

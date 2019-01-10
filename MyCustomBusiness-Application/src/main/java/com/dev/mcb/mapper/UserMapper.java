@@ -16,7 +16,7 @@ public class UserMapper {
         return user;
     }
 
-    public UserEntity toEntity(User user) {
+    public UserEntity map(User user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(user.getId());
         userEntity.setUsername(user.getUsername());

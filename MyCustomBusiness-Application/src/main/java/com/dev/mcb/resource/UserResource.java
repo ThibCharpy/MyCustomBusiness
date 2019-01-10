@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UserResource {
 
     @Inject
@@ -83,11 +84,8 @@ public class UserResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long userId, User updatedUser) {
         try {
-            Optional<User> result = userService.updateUser(userId,updatedUser);
-            if (result.isPresent())
-                return Response.ok(result.get()).build();
-            else
-                return Response.status(404).entity(ERROR_404).build();
+            User result = userService.updateUser(userId,updatedUser);
+            return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
         }

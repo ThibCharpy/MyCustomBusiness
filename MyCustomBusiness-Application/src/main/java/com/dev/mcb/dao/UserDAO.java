@@ -38,6 +38,6 @@ public interface UserDAO {
      * Retrieve every user
      * @return the list of users
      */
-    public List findAll();
+    public List<UserEntity> findAll();
 
 }

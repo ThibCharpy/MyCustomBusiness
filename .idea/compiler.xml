@@ -6,14 +6,15 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="MyCustomBusinessApi" />
+        <module name="MyCustomBusiness-Api" />
         <module name="MyCustomBusinessApplication" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="MyCustomBusiness" target="1.5" />
-      <module name="MyCustomBusinessApi" target="1.7" />
-      <module name="MyCustomBusinessApplication" target="1.7" />
+      <module name="MyCustomBusiness-Api" target="1.8" />
+      <module name="MyCustomBusinessApi" target="1.8" />
+      <module name="MyCustomBusinessApplication" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
