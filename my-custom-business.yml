@@ -9,7 +9,7 @@ database:
   password: azerty
 
   # the JDBC URL; the database is called hello_world
-  url: jdbc:mysql://localhost:3306/mcb_db
+  url: jdbc:mysql://localhost:3306/mcb_db?autoReconnect=true&useSSL=false
 
   # the SQL query to run when validating a connection's liveness
   validationQuery: "/* MyService Health Check */ SELECT 1"
@@ -20,6 +20,8 @@ database:
     hibernate.dialect: org.hibernate.dialect.MySQLDialect  #org.hibernate.dialect.MySQL5InnoDBDialect
 
 server:
+  type: default
+  applicationContextPath: /MCB-API
   applicationConnectors:
     - type: http
       port: 8080
