@@ -45,6 +45,6 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
     @Override
     @SuppressWarnings("unchecked")
     public List<UserEntity> findAll() {
-        return list((Query<UserEntity>) namedQuery("com.dev.mcb.core.User.findAll"));
+        return list((Query<UserEntity>) namedQuery("com.dev.mcb.core.UserEntity.findAll"));
     }
 }

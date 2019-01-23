@@ -1,6 +1,7 @@
 package com.dev.mcb.dao;
 
 import com.dev.mcb.core.UserEntity;
+import org.jdbi.v3.sqlobject.statement.SqlQuery;
 
 import java.util.List;
 import java.util.Optional;

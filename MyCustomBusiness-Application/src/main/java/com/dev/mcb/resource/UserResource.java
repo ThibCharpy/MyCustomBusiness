@@ -1,9 +1,12 @@
 package com.dev.mcb.resource;
 
+import com.dev.mcb.MyCustomBusinessConfiguration;
 import com.dev.mcb.User;
 import com.dev.mcb.core.UserEntity;
 import com.dev.mcb.dao.UserDAO;
+import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.mapper.UserMapper;
+import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
 import org.jdbi.v3.core.Jdbi;
@@ -20,7 +23,9 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
-    private Jdbi database;
+    private HibernateBundle<MyCustomBusinessConfiguration> database;
+
+    private UserDAO userDAO;
 
     @Inject
     private UserMapper userMapper;
@@ -28,16 +33,19 @@ public class UserResource {
     private static final String ERROR_404 = "User not found";
     private static final String ERROR_500 = "Internal error in user resource";
 
-    public UserResource(Jdbi jdbi) {
-        this.database = jdbi;
+    public UserResource(HibernateBundle<MyCustomBusinessConfiguration> database) {
+        this.database = database;
+    }
+
+    public UserResource(UserDAO dao) {
+        this.userDAO = dao;
     }
 
     @GET
     @UnitOfWork
-    @Produces(MediaType.APPLICATION_JSON)
     public Response findAll() {
         try {
-            List<User> result = getUserDao().findAll().stream().map(userMapper::from).collect(Collectors.toList());
+            List<User> result = this.userDAO.findAll().stream().map(userMapper::from).collect(Collectors.toList());
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -47,10 +55,9 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @UnitOfWork
-    @Produces(MediaType.APPLICATION_JSON)
     public Response findUserById(@PathParam("id") Long userId) {
         try {
-            Optional<UserEntity> userEntity = getUserDao().findById(userId);
+            Optional<UserEntity> userEntity = this.userDAO.findById(userId);
             Optional<User> result = userEntity.map(entity -> userMapper.from(entity));
             if (result.isPresent())
                 return Response.ok(result.get()).build();
@@ -64,12 +71,10 @@ public class UserResource {
     @POST
     @Path("/new")
     @UnitOfWork
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response createUser(User newUser) {
         try {
             UserEntity newUserEntity = userMapper.map(newUser);
-            User result = userMapper.from(getUserDao().create(newUserEntity));
+            User result = userMapper.from(this.userDAO.create(newUserEntity));
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -81,7 +86,7 @@ public class UserResource {
     @UnitOfWork
     public Response deleteUser(@PathParam("id") Long userId){
         try {
-            getUserDao().delete(userId);
+            this.userDAO.delete(userId);
             return Response.ok().build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -91,13 +96,11 @@ public class UserResource {
     @PUT
     @Path("/{id}/update")
     @UnitOfWork
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@PathParam("id") Long userId, User updatedUser) {
         try {
             UserEntity updateUserEntity = userMapper.map(updatedUser);
             updateUserEntity.setId(userId);
-            User result = userMapper.from(getUserDao().update(updateUserEntity));
+            User result = userMapper.from(this.userDAO.update(updateUserEntity));
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -105,6 +108,6 @@ public class UserResource {
     }
 
     private UserDAO getUserDao(){
-        return database.onDemand(UserDAO.class);
+        return new UserDAOImpl(database.getSessionFactory());
     }
 }
