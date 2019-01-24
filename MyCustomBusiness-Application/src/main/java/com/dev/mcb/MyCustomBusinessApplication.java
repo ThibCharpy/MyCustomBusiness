@@ -9,6 +9,7 @@ import com.dev.mcb.resource.UserResource;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
+import io.dropwizard.hibernate.ScanningHibernateBundle;
 import io.dropwizard.jdbi3.JdbiFactory;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -25,8 +26,8 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     }
 
     private final HibernateBundle<MyCustomBusinessConfiguration> hibernate =
-            new HibernateBundle<MyCustomBusinessConfiguration>(
-                    User.class
+            new ScanningHibernateBundle<MyCustomBusinessConfiguration>(
+                    "com.dev.mcb.core"
             ) {
                 @Override
                 public DataSourceFactory getDataSourceFactory(MyCustomBusinessConfiguration configuration) {
