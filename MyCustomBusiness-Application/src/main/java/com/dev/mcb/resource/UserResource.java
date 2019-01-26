@@ -10,8 +10,11 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
 import org.jdbi.v3.core.Jdbi;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+
     private HibernateBundle<MyCustomBusinessConfiguration> database;
 
     private UserDAO userDAO;
@@ -33,10 +38,6 @@ public class UserResource {
     private static final String ERROR_404 = "User not found";
     private static final String ERROR_500 = "Internal error in user resource";
 
-    public UserResource(HibernateBundle<MyCustomBusinessConfiguration> database) {
-        this.database = database;
-    }
-
     public UserResource(UserDAO dao) {
         this.userDAO = dao;
     }
@@ -45,7 +46,7 @@ public class UserResource {
     @UnitOfWork
     public Response findAll() {
         try {
-            List<User> result = this.userDAO.findAll().stream().map(userMapper::from).collect(Collectors.toList());
+            List<UserEntity> result = this.userDAO.findAll();
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -71,7 +72,7 @@ public class UserResource {
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response createUser(User newUser) {
+    public Response createUser(@Valid User newUser) {
         try {
             UserEntity newUserEntity = userMapper.map(newUser);
             User result = userMapper.from(this.userDAO.create(newUserEntity));
@@ -82,7 +83,7 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("/{id}/delete")
+    @Path("/{id}")
     @UnitOfWork
     public Response deleteUser(@PathParam("id") Long userId){
         try {
@@ -94,7 +95,7 @@ public class UserResource {
     }
 
     @PUT
-    @Path("/{id}/update")
+    @Path("/{id}")
     @UnitOfWork
     public Response updateUser(@PathParam("id") Long userId, User updatedUser) {
         try {

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
 
-    private final static Logger logger = Logger.getLogger(UserDAOImpl.class);
+    private final static Logger LOGGER = Logger.getLogger(UserDAOImpl.class);
 
     public UserDAOImpl(SessionFactory sessionFactory) {
         super(sessionFactory);
@@ -25,21 +25,20 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
 
     @Override
     public UserEntity create(UserEntity user) {
+        LOGGER.debug("Creating new entity: "+user);
         return persist(user);
     }
 
     @Override
     public UserEntity update(UserEntity user) {
-        this.currentSession().saveOrUpdate(user);
-        return null;
+        LOGGER.debug("Updating entity: "+user);
+        return persist(user);
     }
 
     @Override
     public void delete(long userId) {
         Optional<UserEntity> user = findById(userId);
-        if (user.isPresent()) {
-            this.currentSession().delete(user);
-        }
+        user.ifPresent(userEntity -> currentSession().delete(userEntity));
     }
 
     @Override

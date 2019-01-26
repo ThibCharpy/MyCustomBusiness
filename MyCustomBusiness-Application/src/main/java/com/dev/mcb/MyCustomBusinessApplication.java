@@ -50,12 +50,8 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     public void run(MyCustomBusinessConfiguration configuration,
                     Environment environment) throws Exception {
 
-
-        //final JdbiFactory factory = new JdbiFactory();
-        //final Jdbi jdbi = factory.build(environment, configuration.getDataSourceFactory(), "mysql");
-
         // DAOs
-        //final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
+        final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
 
         environment.jersey().register(new AbstractBinder() {
             @Override
@@ -65,7 +61,7 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
             }
         });
 
-        environment.jersey().register(new UserResource(new UserDAOImpl(hibernate.getSessionFactory())));
+        environment.jersey().register(new UserResource(userDAO));
 
         //environment.healthChecks().register("health",
                 //new DatabaseHealthCheck(jdbi, configuration.getDataSourceFactory().getValidationQuery()));

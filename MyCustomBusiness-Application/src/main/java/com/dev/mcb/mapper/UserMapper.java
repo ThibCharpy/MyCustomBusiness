@@ -9,7 +9,6 @@ public class UserMapper {
 
     public User from(UserEntity userEntity) {
         User user = new User();
-        user.setId(userEntity.getId());
         user.setUsername(userEntity.getUsername());
         user.setEmail(userEntity.getEmail());
         user.setPassword(userEntity.getPassword());
@@ -18,7 +17,6 @@ public class UserMapper {
 
     public UserEntity map(User user) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(user.getId());
         userEntity.setUsername(user.getUsername());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(user.getPassword());
