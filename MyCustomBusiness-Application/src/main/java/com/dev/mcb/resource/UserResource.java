@@ -9,15 +9,15 @@ import com.dev.mcb.mapper.UserMapper;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
-import org.jdbi.v3.core.Jdbi;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 public class UserResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
-
-    private HibernateBundle<MyCustomBusinessConfiguration> database;
 
     private UserDAO userDAO;
 
@@ -46,7 +44,10 @@ public class UserResource {
     @UnitOfWork
     public Response findAll() {
         try {
-            List<UserEntity> result = this.userDAO.findAll();
+            List<User> result = Optional.ofNullable(userDAO.findAll())
+                    .orElseGet(Collections::emptyList)
+                    .stream().map(UserMapper::from)
+                    .collect(Collectors.toList());
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -58,12 +59,10 @@ public class UserResource {
     @UnitOfWork
     public Response findUserById(@PathParam("id") Long userId) {
         try {
-            Optional<UserEntity> userEntity = this.userDAO.findById(userId);
-            Optional<User> result = userEntity.map(entity -> userMapper.from(entity));
-            if (result.isPresent())
-                return Response.ok(result.get()).build();
-            else
-                return Response.status(404).entity(ERROR_404).build();
+            User result = Optional.ofNullable(userDAO.findById(userId))
+                    .map(UserMapper::from)
+                    .orElseThrow(NotFoundException::new);
+            return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
         }
@@ -72,10 +71,32 @@ public class UserResource {
     @POST
     @Path("/new")
     @UnitOfWork
-    public Response createUser(@Valid User newUser) {
+    public Response createUser(@NotNull User newUser) {
         try {
-            UserEntity newUserEntity = userMapper.map(newUser);
-            User result = userMapper.from(this.userDAO.create(newUserEntity));
+            UserEntity newUserEntity = Optional.ofNullable(newUser)
+                    .map(UserMapper::to)
+                    .orElseThrow(() -> new BadRequestException("No user provided for create"));
+            User result = Optional.ofNullable(userDAO.create(newUserEntity))
+                    .map(UserMapper::from)
+                    .orElse(null);
+            return Response.ok(result).build();
+        } catch (HibernateException he) {
+            return Response.status(500).entity(ERROR_500).build();
+        }
+    }
+
+    @PUT
+    @Path("/{id}")
+    @UnitOfWork
+    public Response updateUser(@PathParam("id") Long userId, @NotNull User updatedUser) {
+        try {
+            UserEntity updateUserEntity = Optional.ofNullable(updatedUser)
+                    .map(UserMapper::to)
+                    .orElseThrow(() -> new BadRequestException("No user provided for update"));
+            updateUserEntity.setId(userId);
+            User result = Optional.ofNullable(this.userDAO.update(updateUserEntity))
+                    .map(UserMapper::from)
+                    .orElse(null);
             return Response.ok(result).build();
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
@@ -92,23 +113,5 @@ public class UserResource {
         } catch (HibernateException he) {
             return Response.status(500).entity(ERROR_500).build();
         }
-    }
-
-    @PUT
-    @Path("/{id}")
-    @UnitOfWork
-    public Response updateUser(@PathParam("id") Long userId, User updatedUser) {
-        try {
-            UserEntity updateUserEntity = userMapper.map(updatedUser);
-            updateUserEntity.setId(userId);
-            User result = userMapper.from(this.userDAO.update(updateUserEntity));
-            return Response.ok(result).build();
-        } catch (HibernateException he) {
-            return Response.status(500).entity(ERROR_500).build();
-        }
-    }
-
-    private UserDAO getUserDao(){
-        return new UserDAOImpl(database.getSessionFactory());
     }
 }

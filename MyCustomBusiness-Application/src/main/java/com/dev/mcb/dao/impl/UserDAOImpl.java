@@ -19,8 +19,9 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
     }
 
     @Override
-    public Optional<UserEntity> findById(Long id) {
-        return Optional.ofNullable(get(id));
+    public UserEntity findById(Long id) {
+        LOGGER.debug("Getting user entity with id: "+id);
+        return get(id);
     }
 
     @Override
@@ -37,13 +38,14 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
 
     @Override
     public void delete(long userId) {
-        Optional<UserEntity> user = findById(userId);
-        user.ifPresent(userEntity -> currentSession().delete(userEntity));
+        LOGGER.debug("Deleting entity with id: "+userId);
+        Optional.ofNullable(findById(userId)).ifPresent(userEntity -> currentSession().delete(userEntity));
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<UserEntity> findAll() {
+        LOGGER.debug("Getting every users");
         return list((Query<UserEntity>) namedQuery("com.dev.mcb.core.UserEntity.findAll"));
     }
 }

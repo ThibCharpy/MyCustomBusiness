@@ -13,7 +13,7 @@ public interface UserDAO {
      * @param id user id
      * @return the User entity
      */
-    public Optional<UserEntity> findById(Long id);
+    public UserEntity findById(Long id);
 
     /**
      * Create a new user

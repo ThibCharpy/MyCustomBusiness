@@ -19,6 +19,13 @@ database:
     charSet: UTF-8
     hibernate.dialect: org.hibernate.dialect.MySQLDialect  #org.hibernate.dialect.MySQL5InnoDBDialect
 
+  # Other
+  maxWaitForConnection: 1s
+  minSize: 1
+  maxSize: 5
+  initialSize: 1
+  maxConnectionAge: 14400s
+
 server:
   type: default
   applicationContextPath: /MCB-API
