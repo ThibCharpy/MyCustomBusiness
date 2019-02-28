@@ -11,19 +11,4 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
-  <component name="SbtLocalSettings">
-    <option name="externalProjectsViewState">
-      <projects_view />
-    </option>
-    <option name="projectSyncType">
-      <map>
-        <entry key="$USER_HOME$/Documents/FAC/Master/Master_2/PPC/Projet/LeaderElection" value="PREVIEW" />
-        <entry key="$USER_HOME$/Documents/FAC/Master/Master_2/PPC/TME8_code/TME8" value="PREVIEW" />
-        <entry key="$USER_HOME$/Documents/FAC/Master/Master_2/PPC/TME9/TME9_code/TME9" value="PREVIEW" />
-      </map>
-    </option>
-  </component>
-  <component name="ScalaSbtSettings">
-    <option name="customVMPath" />
-  </component>
 </project>
