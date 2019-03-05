@@ -19,6 +19,13 @@ import java.util.EnumSet;
 
 public class MyCustomBusinessApplication extends Application<MyCustomBusinessConfiguration> {
 
+    //TODO: store encrypted passwords
+    //TODO: add tests
+    //TODO: make the password not editable
+    //TODO: add oauth integration
+    //TODO create the login/lgout resources
+    //TODO: update the database either with mysql patches or liquibase patches
+
     private static final String APPLICATION_NAME = "My Custom Business";
 
     public static void main(String[] args) throws Exception {

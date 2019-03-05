@@ -1,16 +1,11 @@
 package com.dev.mcb.resource;
 
-import com.dev.mcb.MyCustomBusinessConfiguration;
 import com.dev.mcb.User;
 import com.dev.mcb.core.UserEntity;
 import com.dev.mcb.dao.UserDAO;
-import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.mapper.UserMapper;
-import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -25,8 +20,6 @@ import java.util.stream.Collectors;
 @Path("/users")
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
 
     private UserDAO userDAO;
 

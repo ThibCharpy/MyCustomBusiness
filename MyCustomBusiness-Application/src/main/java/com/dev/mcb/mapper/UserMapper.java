@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public class UserMapper {
 
-    //TODO: password must be no convert in datas
-
     /**
      * Convert User entity to user api object
      * @param userEntity user entity

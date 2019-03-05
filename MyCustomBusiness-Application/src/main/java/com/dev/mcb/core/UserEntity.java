@@ -14,8 +14,6 @@ import java.util.Objects;
         })
 public class UserEntity {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
@@ -30,14 +28,7 @@ public class UserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    public UserEntity() {
-    }
-
-    public UserEntity(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
+    public UserEntity() {}
 
     public Long getId() {
         return id;
