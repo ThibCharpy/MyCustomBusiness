@@ -5,6 +5,7 @@ import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.filter.CorsServletFilter;
 import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.resource.UserResource;
+import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.Application;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -57,6 +58,8 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     public void run(MyCustomBusinessConfiguration configuration,
                     Environment environment) {
 
+        final String salt = configuration.getSalt();
+
         // DAOs
         final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
 
@@ -65,12 +68,14 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
             protected void configure() {
                 // Mappers
                 bind(new UserMapper()).to(UserMapper.class);
+                bind(new HashedPasswordUtil(salt)).to(HashedPasswordUtil.class);
             }
         });
 
         // Resources
         environment.jersey().register(new UserResource(userDAO));
 
+        // Filters
         environment.servlets().addFilter("CorsServletFilter", new CorsServletFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
     }

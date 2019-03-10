@@ -50,3 +50,5 @@ logging:
     # Redirects SQL logs to a separate file
     org.hibernate.SQL:
       level: DEBUG
+
+salt: "aLocalGeneratedSalt"
