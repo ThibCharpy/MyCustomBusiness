@@ -12,27 +12,11 @@ public class MyCustomBusinessConfiguration extends Configuration {
 
     @Valid
     @NotNull
-    private String salt = "";
-
-    @Valid
-    @NotNull
+    @JsonProperty("database")
     private DataSourceFactory database = new DataSourceFactory();
 
-    @JsonProperty("database")
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
 
-    @JsonProperty("database")
-    public void setDataSourceFactory(DataSourceFactory dataSourceFactory) { this.database = dataSourceFactory; }
-
-    @JsonProperty("salt")
-    public String getSalt() {
-        return salt;
-    }
-
-    @JsonProperty("salt")
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 }

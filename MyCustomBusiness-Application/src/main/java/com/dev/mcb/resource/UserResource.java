@@ -1,9 +1,12 @@
 package com.dev.mcb.resource;
 
 import com.dev.mcb.User;
+import com.dev.mcb.core.UserConfigEntity;
 import com.dev.mcb.core.UserEntity;
+import com.dev.mcb.core.enums.UserConfigType;
 import com.dev.mcb.dao.UserDAO;
 import com.dev.mcb.mapper.UserMapper;
+import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
 
@@ -21,17 +24,17 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
 
+    @Inject
     private UserDAO userDAO;
 
     @Inject
     private UserMapper userMapper;
 
+    @Inject
+    private HashedPasswordUtil hasher;
+
     private static final String ERROR_404 = "User not found";
     private static final String ERROR_500 = "Internal error in user resource";
-
-    public UserResource(UserDAO dao) {
-        this.userDAO = dao;
-    }
 
     @GET
     @UnitOfWork
@@ -69,6 +72,9 @@ public class UserResource {
             UserEntity newUserEntity = Optional.ofNullable(newUser)
                     .map(UserMapper::to)
                     .orElseThrow(() -> new BadRequestException("No user provided for create"));
+            final String salt = hasher.generateSalt();
+            newUserEntity.setPassword(hasher.getHashedPassword(newUserEntity.getPassword(), salt));
+            newUserEntity.getConfigurations().add(new UserConfigEntity(UserConfigType.SALT.toString(),salt));
             User result = Optional.ofNullable(userDAO.create(newUserEntity))
                     .map(UserMapper::from)
                     .orElse(null);

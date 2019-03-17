@@ -2,16 +2,23 @@ package com.dev.mcb.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Arrays;
 
 public class HashedPasswordUtil {
 
-    /**
-     * a security salt
-    */
-    private String salt;
+    public HashedPasswordUtil() {
+    }
 
-    public HashedPasswordUtil(String salt) {
-        this.salt = salt;
+    /**
+     * Generate a salt value to hash password
+     * @return the salt
+     */
+    public String generateSalt() {
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[16];
+        random.nextBytes(salt);
+        return new String(salt);
     }
 
     /**
@@ -19,11 +26,11 @@ public class HashedPasswordUtil {
      * @param password the client's send password
      * @return a hashed password
      */
-    public String getHashedPassword(String password) {
+    public String getHashedPassword(String password, String salt) {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(Byte.parseByte(this.salt));
+            md.update(Byte.parseByte(salt));
             byte[] bytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
             for(int i=0; i< bytes.length ;i++)
@@ -32,10 +39,20 @@ public class HashedPasswordUtil {
             }
             generatedPassword = sb.toString();
         }
-        catch (NoSuchAlgorithmException e)
-        {
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+
+    /**
+     * Te test if an input password is equals to a hashed password
+     * @param password the tested password
+     * @param hashedPassword the hashed password
+     * @param salt the salt
+     * @return true if the password hased is equals to hashed passwords
+     */
+    public boolean passwordEqualToHash(String password, String hashedPassword, String salt) {
+        return hashedPassword.equals(getHashedPassword(password, salt));
     }
 }

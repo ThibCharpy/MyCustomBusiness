@@ -1,0 +1,25 @@
+use `mcb_db`;
+
+drop table if exists `mcb_user`;
+drop table if exists mcb_user_config;
+
+create table `mcb_user` (
+	`userId` int(11) not null auto_increment,
+    `username` varchar(32) not null,
+    `email` varchar(128) not null,
+    `password` varchar(256) not null,
+    primary key (`userId`),
+    unique (`userId`),
+    unique (`email`),
+    unique (`password`)
+) engine=InnoDB;
+
+create table mcb_user_config (
+	user_config_id int(11) not null auto_increment,
+    userId int(11) not null,
+    user_config_key varchar(128) not null,
+    user_config_value varchar(256),
+    primary key (user_config_id),
+    foreign key fk_user(userId) references mcb_user(userId) on delete restrict on update cascade,
+    unique(user_config_id)
+) engine=InnoDB;

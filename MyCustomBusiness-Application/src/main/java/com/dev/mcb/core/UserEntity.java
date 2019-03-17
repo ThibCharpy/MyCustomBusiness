@@ -1,6 +1,7 @@
 package com.dev.mcb.core;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -27,6 +28,9 @@ public class UserEntity {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "userId")
+    private List<UserConfigEntity> configurations;
 
     public UserEntity() {}
 
@@ -62,6 +66,14 @@ public class UserEntity {
         this.password = password;
     }
 
+    public List<UserConfigEntity> getConfigurations() {
+        return configurations;
+    }
+
+    public void setConfigurations(List<UserConfigEntity> configurations) {
+        this.configurations = configurations;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,12 +82,13 @@ public class UserEntity {
         return Objects.equals(id, that.id) &&
                 Objects.equals(username, that.username) &&
                 Objects.equals(email, that.email) &&
-                Objects.equals(password, that.password);
+                Objects.equals(password, that.password) &&
+                Objects.equals(configurations, that.configurations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password);
+        return Objects.hash(id, username, email, password, configurations);
     }
 
     @Override
@@ -85,6 +98,7 @@ public class UserEntity {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", configurations=" + configurations +
                 '}';
     }
 }

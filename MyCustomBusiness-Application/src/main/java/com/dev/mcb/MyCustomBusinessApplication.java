@@ -13,8 +13,11 @@ import io.dropwizard.hibernate.ScanningHibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import zone.dragon.dropwizard.HK2Bundle;
 
+import javax.inject.Singleton;
 import javax.servlet.DispatcherType;
 import java.util.EnumSet;
 
@@ -26,6 +29,8 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     //TODO: add oauth integration
     //TODO create the login/lgout resources
     //TODO: update the database either with mysql patches or liquibase patches
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyCustomBusinessApplication.class);
 
     private static final String APPLICATION_NAME = "My Custom Business";
 
@@ -57,23 +62,16 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
     @Override
     public void run(MyCustomBusinessConfiguration configuration,
                     Environment environment) {
-
-        final String salt = configuration.getSalt();
+        LOGGER.info("Start application !");
 
         // DAOs
-        final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
+        //final UserDAO userDAO = new UserDAOImpl(hibernate.getSessionFactory());
 
-        environment.jersey().register(new AbstractBinder() {
-            @Override
-            protected void configure() {
-                // Mappers
-                bind(new UserMapper()).to(UserMapper.class);
-                bind(new HashedPasswordUtil(salt)).to(HashedPasswordUtil.class);
-            }
-        });
+        environment.jersey().register(new MyCustomBusinessBinder(configuration, environment, hibernate.getSessionFactory()));
 
         // Resources
-        environment.jersey().register(new UserResource(userDAO));
+        //environment.jersey().register(new UserResource(userDAO));
+        environment.jersey().register(new UserResource());
 
         // Filters
         environment.servlets().addFilter("CorsServletFilter", new CorsServletFilter())
