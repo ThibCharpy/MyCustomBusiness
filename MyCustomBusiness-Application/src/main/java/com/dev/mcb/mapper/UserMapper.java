@@ -4,7 +4,6 @@ import com.dev.mcb.User;
 import com.dev.mcb.core.UserEntity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Optional;
 
 public class UserMapper {

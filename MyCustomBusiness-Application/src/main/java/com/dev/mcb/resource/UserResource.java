@@ -9,6 +9,8 @@ import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.validation.constraints.NotNull;
@@ -33,7 +35,8 @@ public class UserResource {
     @Inject
     private HashedPasswordUtil hasher;
 
-    private static final String ERROR_404 = "User not found";
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserResource.class);
+
     private static final String ERROR_500 = "Internal error in user resource";
 
     @GET
@@ -46,6 +49,7 @@ public class UserResource {
                     .collect(Collectors.toList());
             return Response.ok(result).build();
         } catch (HibernateException he) {
+            LOGGER.error("Hibernate error on findAll");
             return Response.status(500).entity(ERROR_500).build();
         }
     }
@@ -60,6 +64,7 @@ public class UserResource {
                     .orElseThrow(NotFoundException::new);
             return Response.ok(result).build();
         } catch (HibernateException he) {
+            LOGGER.error("Hibernate error on findById");
             return Response.status(500).entity(ERROR_500).build();
         }
     }
@@ -74,12 +79,14 @@ public class UserResource {
                     .orElseThrow(() -> new BadRequestException("No user provided for create"));
             final String salt = hasher.generateSalt();
             newUserEntity.setPassword(hasher.getHashedPassword(newUserEntity.getPassword(), salt));
-            newUserEntity.getConfigurations().add(new UserConfigEntity(UserConfigType.SALT.toString(),salt));
+            UserConfigEntity userConfigEntity = new UserConfigEntity(newUserEntity, UserConfigType.SALT.toString(), salt);
+            newUserEntity.setConfigurations(Collections.singletonList(userConfigEntity));
             User result = Optional.ofNullable(userDAO.create(newUserEntity))
                     .map(UserMapper::from)
                     .orElse(null);
             return Response.ok(result).build();
         } catch (HibernateException he) {
+            LOGGER.error("Hibernate error on user creation");
             return Response.status(500).entity(ERROR_500).build();
         }
     }
@@ -98,6 +105,7 @@ public class UserResource {
                     .orElse(null);
             return Response.ok(result).build();
         } catch (HibernateException he) {
+            LOGGER.error("Hibernate error on user update");
             return Response.status(500).entity(ERROR_500).build();
         }
     }
@@ -110,6 +118,7 @@ public class UserResource {
             this.userDAO.delete(userId);
             return Response.ok().build();
         } catch (HibernateException he) {
+            LOGGER.error("Hibernate error on user delete");
             return Response.status(500).entity(ERROR_500).build();
         }
     }

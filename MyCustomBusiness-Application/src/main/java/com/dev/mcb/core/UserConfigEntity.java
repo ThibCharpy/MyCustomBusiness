@@ -22,7 +22,7 @@ public class UserConfigEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userId;
+    private UserEntity user;
 
     @Column(name = "user_config_key", nullable = false)
     private String key;
@@ -30,10 +30,8 @@ public class UserConfigEntity {
     @Column(name = "user_config_value", nullable = false)
     private String value;
 
-    public UserConfigEntity() {
-    }
-
-    public UserConfigEntity(String key, String value) {
+    public UserConfigEntity(UserEntity user, String key, String value) {
+        this.user = user;
         this.key = key;
         this.value = value;
     }
@@ -46,12 +44,12 @@ public class UserConfigEntity {
         this.id = id;
     }
 
-    public UserEntity getUserId() {
-        return userId;
+    public UserEntity getUser() {
+        return user;
     }
 
-    public void setUserId(UserEntity userId) {
-        this.userId = userId;
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public String getKey() {
@@ -68,21 +66,5 @@ public class UserConfigEntity {
 
     public void setValue(String value) {
         this.value = value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserConfigEntity that = (UserConfigEntity) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(userId, that.userId) &&
-                Objects.equals(key, that.key) &&
-                Objects.equals(value, that.value);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, key, value);
     }
 }

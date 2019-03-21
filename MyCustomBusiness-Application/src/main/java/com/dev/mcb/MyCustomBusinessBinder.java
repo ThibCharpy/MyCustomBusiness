@@ -3,6 +3,7 @@ package com.dev.mcb;
 import com.dev.mcb.dao.UserDAO;
 import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.mapper.UserMapper;
+import com.dev.mcb.resource.UserResource;
 import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
@@ -33,12 +34,14 @@ public class MyCustomBusinessBinder extends AbstractBinder {
         LOGGER.info("Starting application binding");
 
         bind(configuration);
-
+        // DAO
         UserDAO userDAO = new UserDAOImpl(this.sessionFactory);
         bind(userDAO).to(UserDAO.class);
 
+        // Mapper
         bind(UserMapper.class).to(UserMapper.class).in(Singleton.class);
 
+        // Util
         bind(HashedPasswordUtil.class).to(HashedPasswordUtil.class);
 
         LOGGER.info("End binding for service application");
