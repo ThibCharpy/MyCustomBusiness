@@ -3,6 +3,8 @@ package com.dev.mcb.mapper;
 import com.dev.mcb.User;
 import com.dev.mcb.core.UserEntity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Optional;
 
 public class UserMapper {
@@ -29,6 +31,7 @@ public class UserMapper {
         return Optional.ofNullable(user)
                 .map(e -> {
                     UserEntity userEntity = new UserEntity();
+                    userEntity.setConfigurations(new ArrayList<>());
                     Optional.ofNullable(e.id).ifPresent(userEntity::setId);
                     Optional.ofNullable(e.username).ifPresent(userEntity::setUsername);
                     Optional.ofNullable(e.email).ifPresent(userEntity::setEmail);

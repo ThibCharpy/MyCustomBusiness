@@ -1,11 +1,15 @@
 package com.dev.mcb.util;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Arrays;
 
 public class HashedPasswordUtil {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HashedPasswordUtil.class);
 
     public HashedPasswordUtil() {
     }
@@ -30,7 +34,7 @@ public class HashedPasswordUtil {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(Byte.parseByte(salt));
+            md.update(salt.getBytes());
             byte[] bytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
             for(int i=0; i< bytes.length ;i++)
@@ -38,8 +42,8 @@ public class HashedPasswordUtil {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sb.toString();
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("Cannot hash password");
             e.printStackTrace();
         }
         return generatedPassword;
