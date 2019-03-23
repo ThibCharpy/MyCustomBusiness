@@ -25,6 +25,13 @@ public class UserDAOImpl extends AbstractDAO<UserEntity> implements UserDAO {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public UserEntity findByEmail(String email) {
+        return uniqueResult((Query<UserEntity>) namedQuery("com.dev.mcb.core.UserEntity.findByEmail")
+                .setParameter("email", email));
+    }
+
+    @Override
     public UserEntity create(UserEntity user) {
         LOGGER.debug("Creating new entity: "+user);
         return persist(user);

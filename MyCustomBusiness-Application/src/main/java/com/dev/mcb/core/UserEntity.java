@@ -1,6 +1,7 @@
 package com.dev.mcb.core;
 
 import javax.persistence.*;
+import java.security.Principal;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,9 +12,13 @@ import java.util.Objects;
                 @NamedQuery(
                         name = "com.dev.mcb.core.UserEntity.findAll",
                         query = "SELECT u FROM UserEntity u"
+                ),
+                @NamedQuery(
+                        name = "com.dev.mcb.core.UserEntity.findByEmail",
+                        query = "SELECT u FROM UserEntity WHERE u.email = :email"
                 )
         })
-public class UserEntity {
+public class UserEntity implements Principal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -89,6 +94,11 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, email, password, configurations);
+    }
+
+    @Override
+    public String getName() {
+        return this.username;
     }
 
     @Override

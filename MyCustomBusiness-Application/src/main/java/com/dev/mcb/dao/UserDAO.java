@@ -14,6 +14,13 @@ public interface UserDAO {
     UserEntity findById(Long id);
 
     /**
+     * Retrieve a user by its email
+     * @param email user email
+     * @return the User entity
+     */
+    UserEntity findByEmail(String email);
+
+    /**
      * Create a new user
      * @param user the new user
      * @return the created user
