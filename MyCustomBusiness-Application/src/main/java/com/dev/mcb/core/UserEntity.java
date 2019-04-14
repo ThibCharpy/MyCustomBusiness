@@ -16,7 +16,7 @@ import java.util.Objects;
                 ),
                 @NamedQuery(
                         name = "com.dev.mcb.core.UserEntity.findByEmail",
-                        query = "SELECT u FROM UserEntity WHERE u.email = :email"
+                        query = "SELECT u FROM UserEntity u WHERE u.email = :email"
                 )
         })
 public class UserEntity implements Principal {

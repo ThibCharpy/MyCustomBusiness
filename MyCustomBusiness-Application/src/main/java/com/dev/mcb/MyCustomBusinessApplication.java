@@ -1,8 +1,16 @@
 package com.dev.mcb;
 
+import com.dev.mcb.auth.UserAuthenticator;
+import com.dev.mcb.auth.UserAuthorizer;
+import com.dev.mcb.core.UserEntity;
 import com.dev.mcb.filter.CorsServletFilter;
+import com.dev.mcb.resource.LoginResource;
 import com.dev.mcb.resource.UserResource;
+import com.dev.mcb.util.enums.UserRoles;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthFilter;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.ScanningHibernateBundle;
@@ -59,17 +67,26 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
 
         environment.jersey().register(new MyCustomBusinessBinder(configuration, environment, hibernate.getSessionFactory()));
 
-        setUpOAuth(configuration, environment);
+        setUpAuth(configuration, environment);
 
         // Resource
         environment.jersey().register(new UserResource());
+        environment.jersey().register(new LoginResource());
 
         // Filters
         environment.servlets().addFilter("CorsServletFilter", new CorsServletFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
     }
 
-    public void setUpOAuth(MyCustomBusinessConfiguration configuration, Environment environment) {
+    public void setUpAuth(MyCustomBusinessConfiguration configuration, Environment environment) {
+        AuthFilter basicCredentialAuthFilter = new BasicCredentialAuthFilter.Builder<UserEntity>()
+                .setAuthenticator(new UserAuthenticator())
+                .setAuthorizer(new UserAuthorizer())
+                .setPrefix("Basic")
+                .buildAuthFilter();
 
+        environment.jersey().register(basicCredentialAuthFilter);
+        environment.jersey().register(UserRoles.class);
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserEntity.class));
     }
 }

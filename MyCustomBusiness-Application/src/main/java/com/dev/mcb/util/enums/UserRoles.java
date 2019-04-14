@@ -1,6 +1,6 @@
 package com.dev.mcb.util.enums;
 
-public enum UserRole {
+public enum UserRoles {
     ADMIN,
     CUSTOMER,
     MANAGER
