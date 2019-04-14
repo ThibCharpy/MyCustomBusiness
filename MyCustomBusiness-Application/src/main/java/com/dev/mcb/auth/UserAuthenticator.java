@@ -37,7 +37,7 @@ public class UserAuthenticator implements Authenticator<BasicCredentials, UserEn
                 .collect(Collectors.toList());
 
         if (saltConfig.size() > 1) {
-            LOGGER.error("Retrieved multiple configurations value");
+            LOGGER.error("Retrieved multiple configurations values");
             throw new IllegalStateException("Multiple configuration values retrieved");
         }
 

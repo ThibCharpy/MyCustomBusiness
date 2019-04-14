@@ -59,11 +59,17 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
 
         environment.jersey().register(new MyCustomBusinessBinder(configuration, environment, hibernate.getSessionFactory()));
 
+        setUpOAuth(configuration, environment);
+
         // Resource
         environment.jersey().register(new UserResource());
 
         // Filters
         environment.servlets().addFilter("CorsServletFilter", new CorsServletFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
+    }
+
+    public void setUpOAuth(MyCustomBusinessConfiguration configuration, Environment environment) {
+
     }
 }

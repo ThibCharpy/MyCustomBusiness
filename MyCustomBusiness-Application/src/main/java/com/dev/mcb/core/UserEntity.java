@@ -2,6 +2,7 @@ package com.dev.mcb.core;
 
 import javax.persistence.*;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +34,9 @@ public class UserEntity implements Principal {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "creation_date", nullable = false)
+    private Date creationDate;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<UserConfigEntity> configurations;
@@ -71,6 +75,14 @@ public class UserEntity implements Principal {
         this.password = password;
     }
 
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public List<UserConfigEntity> getConfigurations() {
         return configurations;
     }
@@ -88,12 +100,13 @@ public class UserEntity implements Principal {
                 Objects.equals(username, that.username) &&
                 Objects.equals(email, that.email) &&
                 Objects.equals(password, that.password) &&
+                Objects.equals(creationDate, that.creationDate) &&
                 Objects.equals(configurations, that.configurations);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, configurations);
+        return Objects.hash(id, username, email, password, creationDate, configurations);
     }
 
     @Override
@@ -108,6 +121,7 @@ public class UserEntity implements Principal {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
+                ", creationDate='" + creationDate + '\'' +
                 ", configurations=" + configurations +
                 '}';
     }

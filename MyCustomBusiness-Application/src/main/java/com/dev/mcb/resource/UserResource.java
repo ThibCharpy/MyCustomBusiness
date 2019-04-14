@@ -9,6 +9,7 @@ import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,11 +79,19 @@ public class UserResource {
             UserEntity newUserEntity = Optional.ofNullable(newUser)
                     .map(UserMapper::to)
                     .orElseThrow(() -> new BadRequestException("No user provided for create"));
-            final String salt = hasher.generateSalt();
-            newUserEntity.setPassword(hasher.getHashedPassword(newUserEntity.getPassword(), salt));
-            UserConfigEntity userConfigEntity = new UserConfigEntity(newUserEntity, UserConfigType.SALT.toString(), salt);
-            newUserEntity.setConfigurations(Collections.singletonList(userConfigEntity));
+
+            newUserEntity.setCreationDate(new Date());
+
             User result = Optional.ofNullable(userDAO.create(newUserEntity))
+                    .map(createdUser -> {
+                        final String salt = hasher.generateSalt();
+                        UserConfigEntity userConfigEntity = new UserConfigEntity(newUserEntity, UserConfigType.SALT.toString(), salt);
+
+                        // Update user configuration
+                        createdUser.setPassword(hasher.getHashedPassword(newUserEntity.getPassword(), salt));
+                        createdUser.setConfigurations(Collections.singletonList(userConfigEntity));
+                        return createdUser;
+                    })
                     .map(UserMapper::from)
                     .orElse(null);
             return Response.ok(result).build();
