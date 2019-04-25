@@ -17,9 +17,9 @@ public class DatabaseHealthCheck extends HealthCheck {
     @Override
     protected Result check() throws Exception {
         try {
-            final Handle handle = dbi.open();
-            handle.execute(validationQuery);
-            handle.close();
+            try (final Handle handle = dbi.open()){
+                handle.execute(validationQuery);
+            }
         } catch (Exception e) {
             return Result.unhealthy("Database is not running!");
         }
