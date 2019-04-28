@@ -5,6 +5,7 @@ import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.resource.UserResource;
 import com.dev.mcb.util.HashedPasswordUtil;
+import com.dev.mcb.util.UserConfigUtil;
 import io.dropwizard.setup.Environment;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.hibernate.SessionFactory;
@@ -43,6 +44,7 @@ public class MyCustomBusinessBinder extends AbstractBinder {
 
         // Util
         bind(HashedPasswordUtil.class).to(HashedPasswordUtil.class);
+        bind(UserConfigUtil.class).to(UserConfigUtil.class);
 
         LOGGER.info("End binding for service application");
     }

@@ -3,11 +3,11 @@ package com.dev.mcb;
 import com.dev.mcb.auth.UserAuthenticator;
 import com.dev.mcb.auth.UserAuthorizer;
 import com.dev.mcb.core.UserEntity;
-import com.dev.mcb.filter.CorsServletFilter;
+import com.dev.mcb.filter.CORSServletFilter;
 import com.dev.mcb.resource.LoginResource;
 import com.dev.mcb.resource.UserResource;
-import com.dev.mcb.util.enums.UserRoles;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
 import io.dropwizard.auth.AuthFilter;
 import io.dropwizard.auth.AuthValueFactoryProvider;
 import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
@@ -16,6 +16,7 @@ import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.ScanningHibernateBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import zone.dragon.dropwizard.HK2Bundle;
@@ -74,7 +75,7 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
         environment.jersey().register(new LoginResource());
 
         // Filters
-        environment.servlets().addFilter("CorsServletFilter", new CorsServletFilter())
+        environment.servlets().addFilter("CORSServletFilter", new CORSServletFilter())
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
     }
 
@@ -82,11 +83,11 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
         AuthFilter basicCredentialAuthFilter = new BasicCredentialAuthFilter.Builder<UserEntity>()
                 .setAuthenticator(new UserAuthenticator())
                 .setAuthorizer(new UserAuthorizer())
-                .setPrefix("Basic")
+                .setRealm("SUPER SECRET STUFF")
                 .buildAuthFilter();
 
-        environment.jersey().register(basicCredentialAuthFilter);
-        environment.jersey().register(UserRoles.class);
+        environment.jersey().register(new AuthDynamicFeature(basicCredentialAuthFilter));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(UserEntity.class));
     }
 }

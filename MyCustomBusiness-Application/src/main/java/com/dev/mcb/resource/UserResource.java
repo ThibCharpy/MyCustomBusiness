@@ -9,7 +9,6 @@ import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.util.HashedPasswordUtil;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

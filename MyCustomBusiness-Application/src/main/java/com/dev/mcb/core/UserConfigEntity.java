@@ -29,6 +29,9 @@ public class UserConfigEntity {
     @Column(name = "user_config_value", nullable = false)
     private String value;
 
+    public UserConfigEntity() {
+    }
+
     public UserConfigEntity(UserEntity user, String key, String value) {
         this.user = user;
         this.key = key;

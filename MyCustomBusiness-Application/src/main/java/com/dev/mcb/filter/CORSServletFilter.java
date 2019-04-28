@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public class CorsServletFilter implements Filter {
+public class CORSServletFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) {
