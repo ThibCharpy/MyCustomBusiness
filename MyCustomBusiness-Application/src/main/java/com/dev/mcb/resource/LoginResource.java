@@ -20,6 +20,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
 
@@ -28,6 +29,7 @@ import java.util.Optional;
 public class LoginResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginResource.class);
+    private static final String AUTH_COOKIE_NAME = "jwt";
 
     @Inject
     private UserDAO userDAO;
@@ -59,7 +61,9 @@ public class LoginResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).build();
+        NewCookie cookie = new NewCookie(userEntity.getId().toString(), token);
+
+        return Response.ok().cookie(cookie).build();
     }
 
     @POST

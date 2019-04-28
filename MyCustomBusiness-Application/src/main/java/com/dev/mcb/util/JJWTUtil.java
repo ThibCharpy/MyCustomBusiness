@@ -21,6 +21,10 @@ public class JJWTUtil {
                 .compact();
     }
 
+    public static boolean verifyToken(String login, String key, String token) {
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody().getSubject().equals(login);
+    }
+
     /**
      * Convert a {@link LocalDateTime} to a {@link Date} object
      * @param localDateTime the LocalDateTime to convert
