@@ -1,4 +1,4 @@
-package com.dev.mcb.util;
+package com.dev.mcb.util.auth;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

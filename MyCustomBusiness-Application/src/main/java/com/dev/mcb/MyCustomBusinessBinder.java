@@ -1,6 +1,8 @@
 package com.dev.mcb;
 
+import com.dev.mcb.dao.UserAuthTokenDAO;
 import com.dev.mcb.dao.UserDAO;
+import com.dev.mcb.dao.impl.UserAuthTokenDAOImpl;
 import com.dev.mcb.dao.impl.UserDAOImpl;
 import com.dev.mcb.mapper.UserMapper;
 import com.dev.mcb.resource.UserResource;
@@ -38,6 +40,8 @@ public class MyCustomBusinessBinder extends AbstractBinder {
         // DAO
         UserDAO userDAO = new UserDAOImpl(this.sessionFactory);
         bind(userDAO).to(UserDAO.class);
+        UserAuthTokenDAO userAuthTokenDAO = new UserAuthTokenDAOImpl(this.sessionFactory);
+        bind(userAuthTokenDAO).to(UserAuthTokenDAO.class);
 
         // Mapper
         bind(UserMapper.class).to(UserMapper.class).in(Singleton.class);

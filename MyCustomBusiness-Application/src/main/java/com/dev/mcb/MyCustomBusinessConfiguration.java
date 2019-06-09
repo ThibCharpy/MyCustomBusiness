@@ -18,5 +18,4 @@ public class MyCustomBusinessConfiguration extends Configuration {
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
-
 }

@@ -26,11 +26,9 @@ import java.util.EnumSet;
 
 public class MyCustomBusinessApplication extends Application<MyCustomBusinessConfiguration> {
 
-    //TODO: add tests
     //TODO: make the password not editable
-    //TODO: add oauth integration
-    //TODO create the login/lgout resources
     //TODO: update the database either with mysql patches or liquibase patches
+    //TODO: add tests
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MyCustomBusinessApplication.class);
 
@@ -79,7 +77,7 @@ public class MyCustomBusinessApplication extends Application<MyCustomBusinessCon
                 .addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), true, "/*");
     }
 
-    public void setUpAuth(MyCustomBusinessConfiguration configuration, Environment environment) {
+    private void setUpAuth(MyCustomBusinessConfiguration configuration, Environment environment) {
         AuthFilter basicCredentialAuthFilter = new BasicCredentialAuthFilter.Builder<UserEntity>()
                 .setAuthenticator(new UserAuthenticator())
                 .setAuthorizer(new UserAuthorizer())

@@ -17,8 +17,6 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -89,14 +87,9 @@ public class UserResource {
                         final String salt = hasher.generateSalt();
                         UserConfigEntity saltConfig = new UserConfigEntity(createdUser, UserConfigType.SALT.toString(), salt);
 
-                        // Create the user's private key
-                        String privateKey = String.join(salt, createdUser.getCreationDate().toString());
-                        final String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKey.getBytes());
-                        UserConfigEntity privateKeyConfig = new UserConfigEntity(createdUser, UserConfigType.PRIVATE_KEY.toString(), encodedPrivateKey);
-
                         // Update user configuration
                         createdUser.setPassword(hasher.getHashedPassword(newUser.password, salt));
-                        createdUser.setConfigurations(Arrays.asList(saltConfig, privateKeyConfig));
+                        createdUser.setConfigurations(Collections.singletonList(saltConfig));
                         return createdUser;
                     })
                     .map(UserMapper::from)

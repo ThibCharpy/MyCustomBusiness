@@ -28,7 +28,7 @@ public class UserConfigUtil {
      * @return the user private key
      */
     public Optional<UserConfigEntity> getPrivateKey(UserEntity userEntity) {
-        return getConfiguration(userEntity, UserConfigType.PRIVATE_KEY);
+        return getConfiguration(userEntity, UserConfigType.KEY);
     }
 
     /**

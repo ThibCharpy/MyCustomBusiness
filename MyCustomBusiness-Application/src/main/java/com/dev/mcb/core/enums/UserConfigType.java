@@ -5,7 +5,7 @@ package com.dev.mcb.core.enums;
  */
 public enum  UserConfigType {
     SALT("USER_SALT"),
-    PRIVATE_KEY("USER_PRIVATE_KEY");
+    KEY("USER_KEY");
 
     UserConfigType(String label) {
     }
